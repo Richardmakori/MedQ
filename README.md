@@ -1,2 +1,2 @@
 # MedQ
-#full healthcare ecosystem
+#full healthcare ecosystem that connects a patient with a doctor
