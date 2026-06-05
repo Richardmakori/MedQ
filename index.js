@@ -46,16 +46,16 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// ─── Body parsing ──────────────────────────────────────────────────────
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// ─── Logging ───────────────────────────────────────────────────────────
+
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 }
 
-// ─── Health check ──────────────────────────────────────────────────────
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString(), env: process.env.NODE_ENV });
 });
@@ -71,12 +71,12 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/uploads', uploadRoutes);
 
-// ─── 404 ───────────────────────────────────────────────────────────────
+
 app.use((req, res) => {
   res.status(404).json({ error: `Route ${req.method} ${req.path} not found` });
 });
 
-// ─── Error handler (must be last) ─────────────────────────────────────
+
 app.use(errorHandler);
 
 app.listen(PORT, () => {
