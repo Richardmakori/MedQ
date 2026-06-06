@@ -29,7 +29,7 @@ const createTokenPair = async (user) => {
   const accessToken = signAccessToken(payload);
   const refreshToken = signRefreshToken(payload);
 
-  // Store refresh token in DB
+
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7);
 
