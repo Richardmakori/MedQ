@@ -14,7 +14,6 @@ const audit = async ({ userId, action, entityType, entityId, metadata, req }) =>
       },
     });
   } catch (err) {
-    // Never let audit logging crash the main flow
     console.error('Audit log error:', err.message);
   }
 };
