@@ -53,7 +53,7 @@ router.get('/specializations', async (req, res) => {
   res.json({ specializations: specs.map((s) => s.specialization) });
 });
 
-// ─── GET /api/doctors/:id ── Public: single doctor profile ───────────────────
+
 router.get('/:id', async (req, res) => {
   const doctor = await prisma.doctor.findUnique({
     where: { id: req.params.id },
