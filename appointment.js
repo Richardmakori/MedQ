@@ -14,7 +14,7 @@ const bookSchema = z.object({
   patientNotes: z.string().max(1000).optional(),
 });
 
-// ─── GET /api/appointments ── Auth: list appointments for current user ─────────
+
 router.get('/', authenticate, async (req, res) => {
   const { status, page = 1, limit = 10 } = req.query;
   const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -53,7 +53,7 @@ router.get('/', authenticate, async (req, res) => {
   });
 });
 
-// ─── GET /api/appointments/:id ── Auth: single appointment ────────────────────
+
 router.get('/:id', authenticate, async (req, res) => {
   const appt = await prisma.appointment.findUnique({
     where: { id: req.params.id },
@@ -81,11 +81,11 @@ router.get('/:id', authenticate, async (req, res) => {
   res.json({ appointment: appt });
 });
 
-// ─── POST /api/appointments ── Patient books an appointment ───────────────────
+
 router.post('/', authenticate, authorize('PATIENT'), async (req, res) => {
   const data = bookSchema.parse(req.body);
 
-  // Validate doctor and service exist and are active
+
   const [doctor, service] = await Promise.all([
     prisma.doctor.findUnique({ where: { id: data.doctorId } }),
     prisma.service.findUnique({ where: { id: data.serviceId } }),
@@ -98,7 +98,7 @@ router.post('/', authenticate, authorize('PATIENT'), async (req, res) => {
     return res.status(400).json({ error: 'Service not found or not offered by this doctor.' });
   }
 
-  // Check slot is not already taken
+
   const apptDate = new Date(data.appointmentDatetime);
   const slotEnd = new Date(apptDate.getTime() + service.durationMinutes * 60 * 1000);
 
@@ -134,7 +134,7 @@ router.post('/', authenticate, authorize('PATIENT'), async (req, res) => {
   res.status(201).json({ appointment });
 });
 
-// ─── PATCH /api/appointments/:id/status ── Doctor or Admin updates status ─────
+
 router.patch('/:id/status', authenticate, async (req, res) => {
   const { status, doctorNotes, cancelReason } = req.body;
 
@@ -149,11 +149,11 @@ router.patch('/:id/status', authenticate, async (req, res) => {
   });
   if (!appt) return res.status(404).json({ error: 'Appointment not found.' });
 
-  // Doctors can only update their own appointments
+  
   if (req.user.role === 'DOCTOR' && appt.doctor.userId !== req.user.userId) {
     return res.status(403).json({ error: 'Access denied.' });
   }
-  // Patients can only cancel their own
+
   if (req.user.role === 'PATIENT') {
     if (appt.patientId !== req.user.userId) return res.status(403).json({ error: 'Access denied.' });
     if (status !== 'CANCELLED') return res.status(403).json({ error: 'Patients may only cancel appointments.' });
