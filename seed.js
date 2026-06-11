@@ -63,7 +63,6 @@ async function main() {
     },
   });
 
-  // Doctor profiles
   const drMwangi = await prisma.doctor.upsert({
     where: { userId: drMwangiUser.id },
     update: {},
@@ -109,7 +108,6 @@ async function main() {
     },
   });
 
-  // Services
   await prisma.service.createMany({
     skipDuplicates: true,
     data: [
@@ -123,7 +121,7 @@ async function main() {
     ],
   });
 
-  // Availability (Mon–Fri, 9am–5pm)
+  
   const days = [1, 2, 3, 4, 5]; // Mon-Fri
   for (const doctor of [drMwangi, drOsei, drMutua]) {
     for (const day of days) {
@@ -135,7 +133,7 @@ async function main() {
     }
   }
 
-  // Patient
+
   const patientHash = await bcrypt.hash('Patient1234!', 12);
   await prisma.user.upsert({
     where: { email: 'richybenah@gmail.com' },
