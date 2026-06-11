@@ -19,7 +19,7 @@ const ALLOWED_MIME_TYPES = [
   'application/pdf',
 ];
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; 
 
 const fileFilter = (req, file, cb) => {
   if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
@@ -29,7 +29,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Upload to S3
+
 const upload = multer({
   storage: multerS3({
     s3,
@@ -49,7 +49,6 @@ const upload = multer({
   limits: { fileSize: MAX_FILE_SIZE },
 });
 
-// Generate a presigned download URL (valid 1 hour)
 const getPresignedUrl = async (key) => {
   const command = new GetObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET,
@@ -58,7 +57,7 @@ const getPresignedUrl = async (key) => {
   return getSignedUrl(s3, command, { expiresIn: 3600 });
 };
 
-// Delete a file from S3
+
 const deleteFile = async (key) => {
   await s3.send(new DeleteObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET,
@@ -66,11 +65,11 @@ const deleteFile = async (key) => {
   }));
 };
 
-// Extract S3 key from full URL
+
 const keyFromUrl = (url) => {
   try {
     const parsed = new URL(url);
-    return parsed.pathname.slice(1); // remove leading /
+    return parsed.pathname.slice(1);
   } catch {
     return url;
   }
