@@ -1,4 +1,4 @@
-// src/routes/services.js
+
 const express = require('express');
 const { z } = require('zod');
 const prisma = require('../utils/prisma');
@@ -14,7 +14,7 @@ const serviceSchema = z.object({
   requiresDocs: z.boolean().default(false),
 });
 
-// ─── GET /api/services?doctorId= ─── Public ───────────────────────────────────
+
 router.get('/', async (req, res) => {
   const { doctorId } = req.query;
   const where = { isActive: true, ...(doctorId && { doctorId }) };
@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
   res.json({ services });
 });
 
-// ─── GET /api/services/:id ─── Public ─────────────────────────────────────────
+
 router.get('/:id', async (req, res) => {
   const service = await prisma.service.findUnique({
     where: { id: req.params.id },
@@ -55,7 +55,7 @@ router.post('/', authenticate, authorize('DOCTOR'), requireVerifiedDoctor, async
   res.status(201).json({ service });
 });
 
-// ─── PATCH /api/services/:id ─── Doctor updates own service ──────────────────
+
 router.patch('/:id', authenticate, authorize('DOCTOR'), requireVerifiedDoctor, async (req, res) => {
   const service = await prisma.service.findUnique({ where: { id: req.params.id } });
   if (!service || service.doctorId !== req.doctor.id) {
@@ -67,7 +67,7 @@ router.patch('/:id', authenticate, authorize('DOCTOR'), requireVerifiedDoctor, a
   res.json({ service: updated });
 });
 
-// ─── DELETE /api/services/:id ─── Doctor deactivates own service ──────────────
+
 router.delete('/:id', authenticate, authorize('DOCTOR'), requireVerifiedDoctor, async (req, res) => {
   const service = await prisma.service.findUnique({ where: { id: req.params.id } });
   if (!service || service.doctorId !== req.doctor.id) {
