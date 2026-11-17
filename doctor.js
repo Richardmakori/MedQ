@@ -5,7 +5,7 @@ const { authenticate, authorize, requireVerifiedDoctor } = require('../middlewar
 
 const router = express.Router();
 
-// ─── GET /api/doctors ─── Public: list verified doctors ───────────────────────
+
 router.get('/', async (req, res) => {
   const { specialization, search, page = 1, limit = 12 } = req.query;
   const skip = (parseInt(page) - 1) * parseInt(limit);
