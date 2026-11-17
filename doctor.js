@@ -136,7 +136,7 @@ router.patch('/profile', authenticate, authorize('DOCTOR'), async (req, res) => 
   res.json({ doctor });
 });
 
-// ─── PUT /api/doctors/availability ── Doctor: set availability ───────────────
+
 router.put('/availability', authenticate, authorize('DOCTOR'), requireVerifiedDoctor, async (req, res) => {
   const { availability } = req.body; // [{ dayOfWeek, startTime, endTime }]
   if (!Array.isArray(availability)) return res.status(400).json({ error: 'availability must be an array.' });
