@@ -11,7 +11,7 @@ const authenticate = (req, res, next) => {
   const token = authHeader.split(' ')[1];
   try {
     const decoded = verifyAccessToken(token);
-    req.user = decoded; // { userId, role, email }
+    req.user = decoded; 
     next();
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
